@@ -1,17 +1,24 @@
 {
   "name": "hackaton-project",
   "version": "1.0.0",
+  "private": true,
+  "type": "module",
   "description": "",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
+    "dev": "concurrently -n connector1,app -c blue,green \"npm run start -w connector1\" \"npm run dev -w app\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "workspaces": [
-    "app"
-  ]
+    "app",
+    "connector1"
+  ],
+  "devDependencies": {
+    "concurrently": "^10.0.3"
+  }
 }

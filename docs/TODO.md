@@ -66,9 +66,9 @@ export interface QueryResult { columns: string[]; rows: unknown[][] }
 
 Add Kysely migration `app/database/kysely/migrations/002_create_widgets_table.ts` (copy the up/down shape of `001_create_todos_table.ts`):
 
-`widgets` — id (autoincrement PK), name TEXT NOT NULL, prompt TEXT NOT NULL, connector_id TEXT NOT NULL, sql TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT current timestamp.
+`widgets` — id (autoincrement PK), name TEXT NOT NULL, prompt TEXT NOT NULL, connector_id TEXT NOT NULL, sql TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT current timestamp, `on_demo` BOOLEAN NOT NULL DEFAULT 0, `demo_order` INTEGER NULL. `on_demo` + `demo_order` track membership/position on the single demo page (curated subset, not "every widget") — see Task 6.
 
-Update `app/database/kysely/types.ts`: add `WidgetTable` to `Database` (keep `todos` for now — remove it and its migration/queries only in Task 6 when the example pages go away). Add `app/database/kysely/queries/widgets.ts` following the style of `queries/todos.ts`: `insertWidget`, `listWidgets`, `getWidgetById`, `cloneWidget` (fetch + reinsert with `name + " (copy)"`).
+Update `app/database/kysely/types.ts`: add `WidgetTable` to `Database` (keep `todos` for now — remove it and its migration/queries only in Task 6 when the example pages go away). Add `app/database/kysely/queries/widgets.ts` following the style of `queries/todos.ts`: `insertWidget`, `listWidgets`, `getWidgetById`, `cloneWidget` (fetch + reinsert with `name + " (copy)"`, clones as `on_demo = 0`), `setWidgetDemo(id, onDemo: boolean)` (toggle membership; when turning on, set `demo_order` to `max(demo_order) + 1`; when turning off, set `demo_order = NULL`), `reorderDemoWidgets(orderedIds: number[])` (bulk-update `demo_order` to match array position), `listDemoWidgets` (widgets where `on_demo = 1`, ordered by `demo_order`).
 
 **Verify:** `npm run kysely:migrate` succeeds; insert + list round-trips in a scratch script.
 
@@ -93,7 +93,10 @@ Extend `app/trpc/server.ts` (follow the existing context pattern — `db` is alr
 - `saveWidget` — input `{ name, prompt, connectorId, sql }`. Re-run the guardrail on the incoming sql (it round-tripped through the client — never trust it), then insert. Returns the widget.
 - `listWidgets` — no input, returns all widgets.
 - `cloneWidget` — input `{ id: number }`.
-- `getWidgetData` — input `{ id: number }`. Load widget → look up its connector → `execute(widget.sql)` → `{ widget, columns, rows }`. Wrap execute in try/catch; on SQL error return a structured `{ error: string }` so the demo page can show "widget broken — regenerate" instead of a 500 (schema-drift case from SPECS.md).
+- `setWidgetDemo` — input `{ id: number, onDemo: boolean }`. Toggles `on_demo` and assigns/clears `demo_order` (see Task 3). Returns the updated widget.
+- `reorderDemoWidgets` — input `{ orderedIds: number[] }`. Bulk-updates `demo_order` for the given widget ids. Returns the updated demo widget list.
+- `listDemoWidgets` — no input, returns widgets where `on_demo = 1` ordered by `demo_order`.
+- `getWidgetData` — input `{ id: number }`. Load widget → look up its connector → `execute(widget.sql)` → `{ widget, columns, rows }`. Wrap execute in try/catch; on SQL error return a structured `{ error: string }` so pages can show "widget broken — regenerate" instead of a 500 (schema-drift case from SPECS.md).
 
 Use zod for all inputs (install `zod`; the existing `onNewTodo` hand-rolled validator is not the pattern to copy).
 
@@ -101,17 +104,18 @@ Use zod for all inputs (install `zod`; the existing `onNewTodo` hand-rolled vali
 
 ## Task 6 — Pages
 
-Two Vike pages in `/app`, replacing the examples (`pages/todo`, `pages/star-wars`, `pages/index/Counter.tsx` can all be deleted; also remove todos queries/migration/types now):
+Three Vike pages in `/app`, replacing the examples (`pages/todo`, `pages/star-wars`, `pages/index/Counter.tsx` can all be deleted; also remove todos queries/migration/types now):
 
-- `pages/admin/+Page.tsx` — the widget store. List widgets (name, prompt, created_at) with Clone button. "New widget" form: prompt textarea + connector select (one option) → calls `generateWidget` → shows returned SQL in a `<pre>` and preview rows in a table → "Save" (name input) calls `saveWidget`. Show guardrail/AI errors inline.
-- `pages/demo/+Page.tsx` — widget dropdown (from `listWidgets`), renders selected widget's data via `getWidgetData` as a plain HTML table (columns + rows as returned). Show the structured error state if the widget is broken. This page is the "demo page" from ARCHITECTURE.md — keep it clean, it's what judges see.
+- `pages/admin/+Page.tsx` — the widget store. List widgets (name, prompt, created_at) with a Clone button, plus a "New widget" button that reveals the create form: prompt textarea + connector select (one option) → calls `generateWidget` → shows returned SQL in a `<pre>` and preview rows in a table → "Save" (name input) calls `saveWidget`. Show guardrail/AI errors inline. Each list row also gets an "Add to demo" / "Remove from demo" toggle calling `setWidgetDemo` (reflecting `on_demo`), so widgets can be curated for the demo without leaving this list.
+- `pages/demo-edit/+Page.tsx` — the demo curation screen. Shows all widgets (from `listWidgets`) with an add/remove toggle (`setWidgetDemo` — same procedure as the admin page's toggle, keep them in sync) and, for widgets already on the demo, reordering (button-based up/down is enough) that calls `reorderDemoWidgets`. This page only manages membership/order — it does not render live widget data.
+- `pages/demo/+Page.tsx` — the "Show widget" page from ARCHITECTURE.md, and what judges see. No dropdown: calls `listDemoWidgets` and renders every returned widget stacked in order, each fetching its own data via `getWidgetData` and rendering as a plain HTML table (columns + rows as returned). Show the structured error state per-widget if one is broken, without blocking the rest of the page.
 
 Use the existing `trpc/client.ts` proxy client with plain `useState`/`useEffect` or event handlers — TanStack Query integration is optional polish, not required for this task. Keep styling minimal (existing Layout.css); function over form.
 
-**Verify:** `npm run dev`, then in the browser: create a widget from the prompt "deals closed this month by banker, with total fees", save it, open /demo, select it, see rows. Restart dev server — widget persists.
+**Verify:** `npm run dev`, then in the browser: create a widget from the prompt "deals closed this month by banker, with total fees", save it, open /demo-edit, add it to the demo, reorder if more than one is added, open /demo, see it render with live rows in the chosen order. Restart dev server — widget and demo membership/order persist.
 
 ---
 
 ## Out of scope (do not build)
 
-View-time parameters, AG-Grid, microfrontend embed, permissions/token pass-through (pitch-only), multiple connectors, non-SQLite dialects, DSL/query-builder layer, auth on the connector API, `pages/index` redesign (leave or make it link to /admin and /demo).
+View-time parameters, AG-Grid, drag-and-drop reordering (button-based up/down is enough), microfrontend embed, permissions/token pass-through (pitch-only), multiple connectors, multiple demo pages, non-SQLite dialects, DSL/query-builder layer, auth on the connector API, `pages/index` redesign (leave or make it link to /admin, /demo-edit, and /demo).

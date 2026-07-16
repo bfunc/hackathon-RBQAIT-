@@ -57,3 +57,8 @@ Python's DB tooling (SQLAlchemy reflection, richer NL2SQL libraries) is more mat
 - The maturity gain rarely pays for that overhead in <48 hours, unless your team is materially stronger in Python than TS.
 
 I'd rate this low for a hackathon specifically — this is more of a "if you had 2 weeks" architecture, not a hackathon one.
+
+у меня по продукту такой вопрос. Как мы это представляем (продаем на словах, не по факту разрабатывает для демо) 
+- как фичу внутри проекта, команда может себе скачать этот код (если  стек совпадает) и сами деплоить
+- как внутрибанковсукий сервис, к которому другие команды подключаются по API например (пишут только схему их базы и тип SQL) 
+

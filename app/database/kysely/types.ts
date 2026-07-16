@@ -1,13 +1,21 @@
-import type { Generated, Insertable, Selectable } from "kysely";
+import type { Generated, Insertable, Selectable, Updateable } from "kysely";
 
 export interface Database {
-  todos: TodoTable;
+  widgets: WidgetTable;
 }
 
-export interface TodoTable {
+export interface WidgetTable {
   id: Generated<number>;
-  text: string;
+  name: string;
+  prompt: string;
+  connector_id: string;
+  sql: string;
+  created_at: Generated<string>;
+  /** SQLite has no boolean type; better-sqlite3 requires 0/1, not true/false. */
+  on_demo: Generated<number>;
+  demo_order: number | null;
 }
 
-export type Todo = Selectable<TodoTable>;
-export type NewTodo = Insertable<TodoTable>;
+export type Widget = Selectable<WidgetTable>;
+export type NewWidget = Insertable<WidgetTable>;
+export type WidgetUpdate = Updateable<WidgetTable>;

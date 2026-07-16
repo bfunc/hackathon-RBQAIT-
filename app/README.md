@@ -16,6 +16,12 @@ npm create vike@latest --- --react --trpc --fastify --sqlite --kysely --oxlint
 
 This app is ready to start. It's powered by [Vike](https://vike.dev) and [React](https://react.dev/learn).
 
+### Environment variables
+
+- `DATABASE_URL` — path to this app's own SQLite file.
+- `OPENAI_API_KEY` / `OPENAI_MODEL` — used by `server/generate-sql.ts` to generate widget SQL from a prompt.
+- `CONNECTOR1_URL` — base URL of the `connector1` HTTP service (default `http://localhost:4001`).
+
 ### Plus files
 
 [The + files are the interface](https://vike.dev/config) between Vike and your code.

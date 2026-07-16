@@ -1,6 +1,9 @@
 import type { dbKysely } from "../database/kysely/db";
-import * as kyselyQueries from "../database/kysely/queries/todos";
+import * as widgetQueries from "../database/kysely/queries/widgets";
+import { getConnector } from "../server/connectors";
+import { assertSingleSelect, generateSql } from "../server/generate-sql";
 import { initTRPC } from "@trpc/server";
+import { z } from "zod";
 
 /**
  * Initialization of tRPC backend
@@ -16,18 +19,77 @@ export const router = t.router;
 export const publicProcedure = t.procedure;
 
 export const appRouter = router({
-  demo: publicProcedure.query(async () => {
-    return { demo: true };
+  getConnectorSchema: publicProcedure
+    .input(z.object({ connectorId: z.string() }))
+    .query(async ({ input }) => {
+      return await getConnector(input.connectorId).getSchema();
+    }),
+
+  generateWidget: publicProcedure
+    .input(z.object({ prompt: z.string(), connectorId: z.string() }))
+    .mutation(async ({ input }) => {
+      const connector = getConnector(input.connectorId);
+      const schema = await connector.getSchema();
+      const sql = await generateSql(schema, input.prompt);
+      const { columns, rows } = await connector.execute(sql);
+      return { sql, columns, rows };
+    }),
+
+  saveWidget: publicProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        prompt: z.string(),
+        connectorId: z.string(),
+        sql: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      assertSingleSelect(input.sql);
+      return await widgetQueries.insertWidget(ctx.db, {
+        name: input.name,
+        prompt: input.prompt,
+        connector_id: input.connectorId,
+        sql: input.sql,
+        on_demo: 0,
+        demo_order: null,
+      });
+    }),
+
+  listWidgets: publicProcedure.query(async ({ ctx }) => {
+    return await widgetQueries.listWidgets(ctx.db);
   }),
-  onNewTodo: publicProcedure
-    .input((value): string => {
-      if (typeof value === "string") {
-        return value;
+
+  cloneWidget: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      return await widgetQueries.cloneWidget(ctx.db, input.id);
+    }),
+
+  setWidgetDemo: publicProcedure
+    .input(z.object({ id: z.number(), onDemo: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      return await widgetQueries.setWidgetDemo(ctx.db, input.id, input.onDemo);
+    }),
+
+  listDemoWidgets: publicProcedure.query(async ({ ctx }) => {
+    return await widgetQueries.listDemoWidgets(ctx.db);
+  }),
+
+  getWidgetData: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const widget = await widgetQueries.getWidgetById(ctx.db, input.id);
+      if (!widget) {
+        throw new Error(`widget ${input.id} not found`);
       }
-      throw new Error("Input is not a string");
-    })
-    .mutation(async (opts) => {
-      await kyselyQueries.insertTodo(opts.ctx.db, opts.input);
+      const connector = getConnector(widget.connector_id);
+      try {
+        const { columns, rows } = await connector.execute(widget.sql);
+        return { widget, columns, rows };
+      } catch (err) {
+        return { widget, error: err instanceof Error ? err.message : String(err) };
+      }
     }),
 });
 

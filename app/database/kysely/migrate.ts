@@ -1,7 +1,7 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { FileMigrationProvider, Migrator } from "kysely/migration";
 import { dbKysely } from "./db";
 
@@ -18,6 +18,9 @@ async function migrateToLatest() {
       // Absolute path required. The runner sits two levels deep in both dev (database/kysely/)
       // and prod (bundled dist/server/), so ../.. reaches the app-root migration sources.
       migrationFolder: path.join(__dirname, "../../database/kysely/migrations"),
+      // Windows: `import()` rejects bare drive-letter paths ("D:\...") as an unsupported URL
+      // scheme — convert to a proper file:// URL before dynamic import.
+      import: (filePath) => import(pathToFileURL(filePath).href),
     }),
   });
 
