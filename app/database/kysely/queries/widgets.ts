@@ -45,6 +45,10 @@ export async function setWidgetDemo(db: ReturnType<typeof dbKysely>, id: number,
   return await getWidgetById(db, id);
 }
 
+export async function deleteWidget(db: ReturnType<typeof dbKysely>, id: number) {
+  await db.deleteFrom("widgets").where("id", "=", id).execute();
+}
+
 export async function listDemoWidgets(db: ReturnType<typeof dbKysely>) {
   return await db
     .selectFrom("widgets")

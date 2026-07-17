@@ -1,7 +1,17 @@
 // https://vike.dev/Head
 
-import logoUrl from "../assets/logo.svg";
+import logoUrl from "../assets/rbqait-logo.png";
 
 export function Head() {
-  return <link rel="icon" href={logoUrl} />;
+  return (
+    <>
+      <link rel="icon" href={logoUrl} />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet"
+      />
+    </>
+  );
 }

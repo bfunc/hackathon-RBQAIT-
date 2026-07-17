@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { trpc } from "../../trpc/client";
-import { DataGrid } from "../../components/DataGrid";
 import type { Widget } from "../../database/kysely/types";
 
 export default function Page() {
@@ -12,31 +11,30 @@ export default function Page() {
 
   return (
     <>
-      <h1>Demo</h1>
-      {widgets.map((widget) => (
-        <WidgetCard key={widget.id} widget={widget} />
-      ))}
+      <h1 style={{ fontSize: "1.9em", marginBottom: 20 }}>Demo</h1>
+      <div className="card" style={{ padding: 0 }}>
+        <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+          {widgets.map((widget, i) => (
+            <li
+              key={widget.id}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "14px 18px",
+                borderBottom: i < widgets.length - 1 ? "1px solid var(--border)" : "none",
+              }}
+            >
+              <span style={{ fontWeight: 500 }}>{widget.name}</span>
+              <a href={`/widget/${widget.id}`}>
+                <button type="button" className="btn btn-primary">
+                  Open
+                </button>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </>
-  );
-}
-
-type WidgetData =
-  | { widget: Widget; columns: string[]; rows: unknown[][] }
-  | { widget: Widget; error: string };
-
-function WidgetCard({ widget }: { widget: Widget }) {
-  const [data, setData] = useState<WidgetData | null>(null);
-
-  useEffect(() => {
-    void trpc.getWidgetData.query({ id: widget.id }).then(setData);
-  }, [widget.id]);
-
-  return (
-    <section style={{ marginBottom: 32 }}>
-      <h2>{widget.name}</h2>
-      {!data && <p>Loading…</p>}
-      {data && "error" in data && <p style={{ color: "red" }}>widget broken — regenerate: {data.error}</p>}
-      {data && "columns" in data && <DataGrid columns={data.columns} rows={data.rows} />}
-    </section>
   );
 }

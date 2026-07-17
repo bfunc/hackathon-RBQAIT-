@@ -1,6 +1,17 @@
-import { openai } from "@ai-sdk/openai";
+import { createOpenAI, openai } from "@ai-sdk/openai";
 import { generateText } from "ai";
 import type { SchemaInfo } from "../shared";
+
+const proxyBaseURL = process.env["OPENAI_PROXY_URL"];
+const openaiProvider = proxyBaseURL
+  ? createOpenAI({
+      baseURL: proxyBaseURL,
+      apiKey: process.env["OPENAI_API_KEY"] ?? "unused",
+      headers: process.env["OPENAI_PROXY_SECRET"]
+        ? { "x-proxy-key": process.env["OPENAI_PROXY_SECRET"] }
+        : undefined,
+    })
+  : openai;
 
 const FORBIDDEN_KEYWORDS = /\b(INSERT|UPDATE|DELETE|DROP|ALTER|CREATE|ATTACH|PRAGMA|REPLACE|VACUUM)\b/i;
 
@@ -61,7 +72,7 @@ Rules:
 
 async function callModel(prompt: string): Promise<string> {
   const { text } = await generateText({
-    model: openai(process.env["OPENAI_MODEL"] ?? "gpt-4o"),
+    model: openaiProvider(process.env["OPENAI_MODEL"] ?? "gpt-4o"),
     prompt,
   });
   return stripMarkdownFences(text);

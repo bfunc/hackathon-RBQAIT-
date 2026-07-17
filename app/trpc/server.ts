@@ -46,7 +46,7 @@ export const appRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       assertSingleSelect(input.sql);
-      return await widgetQueries.insertWidget(ctx.db, {
+      const widget = await widgetQueries.insertWidget(ctx.db, {
         name: input.name,
         prompt: input.prompt,
         connector_id: input.connectorId,
@@ -54,6 +54,7 @@ export const appRouter = router({
         on_demo: 0,
         demo_order: null,
       });
+      return await widgetQueries.setWidgetDemo(ctx.db, widget.id, true);
     }),
 
   listWidgets: publicProcedure.query(async ({ ctx }) => {
@@ -70,6 +71,12 @@ export const appRouter = router({
     .input(z.object({ id: z.number(), onDemo: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       return await widgetQueries.setWidgetDemo(ctx.db, input.id, input.onDemo);
+    }),
+
+  deleteWidget: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await widgetQueries.deleteWidget(ctx.db, input.id);
     }),
 
   listDemoWidgets: publicProcedure.query(async ({ ctx }) => {

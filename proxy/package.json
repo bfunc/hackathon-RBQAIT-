@@ -1,0 +1,14 @@
+{
+  "name": "openai-proxy",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx ./dev-server.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.37",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3"
+  }
+}

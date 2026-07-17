@@ -1,29 +1,39 @@
 import "./Layout.css";
 
-import logoUrl from "../assets/logo.svg";
+import logoUrl from "../assets/rbqait-logo.png";
 import { Link } from "../components/Link";
+import { usePageContext } from "vike-react/usePageContext";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const { config } = usePageContext();
+  const fullWidth = config.fullWidth ?? false;
+
   return (
     <div
       style={{
         display: "flex",
-        maxWidth: 900,
-        margin: "auto",
+        maxWidth: fullWidth ? undefined : 960,
+        margin: fullWidth ? undefined : "auto",
       }}
     >
-      <Sidebar>
-        <Logo />
-        <Link href="/">Welcome</Link>
-        <Link href="/admin">Admin</Link>
-        <Link href="/demo">Demo</Link>
-      </Sidebar>
+      <Nav />
       <Content>{children}</Content>
     </div>
   );
 }
 
-function Sidebar({ children }: { children: React.ReactNode }) {
+export function Nav() {
+  return (
+    <Sidebar>
+      <Logo />
+      <Link href="/">Welcome</Link>
+      <Link href="/admin">Admin</Link>
+      <Link href="/demo">Demo</Link>
+    </Sidebar>
+  );
+}
+
+export function Sidebar({ children }: { children: React.ReactNode }) {
   return (
     <div
       id="sidebar"
@@ -32,8 +42,11 @@ function Sidebar({ children }: { children: React.ReactNode }) {
         flexShrink: 0,
         display: "flex",
         flexDirection: "column",
-        lineHeight: "1.8em",
-        borderRight: "2px solid #eee",
+        gap: 2,
+        lineHeight: "1.4em",
+        borderRight: "1px solid var(--border)",
+        background: "var(--surface)",
+        minHeight: "100vh",
       }}
     >
       {children}
@@ -41,13 +54,13 @@ function Sidebar({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Content({ children }: { children: React.ReactNode }) {
+export function Content({ children }: { children: React.ReactNode }) {
   return (
-    <div id="page-container">
+    <div id="page-container" style={{ flex: 1, minWidth: 0 }}>
       <div
         id="page-content"
         style={{
-          padding: 20,
+          padding: 28,
           paddingBottom: 50,
           minHeight: "100vh",
         }}
@@ -63,11 +76,11 @@ function Logo() {
     <div
       style={{
         marginTop: 20,
-        marginBottom: 10,
+        marginBottom: 16,
       }}
     >
       <a href="/">
-        <img src={logoUrl} height={64} width={64} alt="logo" />
+        <img src={logoUrl} height={72} width={72} alt="logo" style={{ borderRadius: 10, display: "block" }} />
       </a>
     </div>
   );

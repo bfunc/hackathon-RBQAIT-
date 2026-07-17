@@ -10,6 +10,12 @@ const config: Config = {
   description: "Demo showcasing Vike",
 
   extends: [vikeReact],
+
+  meta: {
+    fullWidth: {
+      env: { server: true, client: true },
+    },
+  },
 };
 
 export default config;

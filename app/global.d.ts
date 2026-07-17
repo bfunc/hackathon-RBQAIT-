@@ -5,5 +5,8 @@ declare global {
     interface PageContextServer {
       db: ReturnType<typeof dbKysely>;
     }
+    interface Config {
+      fullWidth?: boolean;
+    }
   }
 }
