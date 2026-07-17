@@ -8,17 +8,12 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "concurrently -n connector1,proxy,app -c blue,yellow,green \"npm run start -w connector1\" \"npm run dev -w proxy\" \"npm run dev -w app\"",
+    "dev": "concurrently -n connector1,proxy,app -c blue,yellow,green \"npm --prefix connector1 run start\" \"npm --prefix proxy run dev\" \"npm --prefix app run dev\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "workspaces": [
-    "app",
-    "connector1",
-    "proxy"
-  ],
   "devDependencies": {
     "concurrently": "^10.0.3"
   }

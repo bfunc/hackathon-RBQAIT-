@@ -8,7 +8,8 @@
     "start": "tsx ./server.ts"
   },
   "dependencies": {
-    "better-sqlite3": "^12.11.1"
+    "better-sqlite3": "^12.11.1",
+    "hackaton-project": "file:.."
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
