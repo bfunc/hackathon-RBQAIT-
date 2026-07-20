@@ -73,6 +73,7 @@ body.page-transition #page-content {
   background: var(--surface-2);
   color: var(--text);
   cursor: pointer;
+  white-space: nowrap;
   transition:
     border-color 0.15s ease,
     background-color 0.15s ease;
@@ -215,13 +216,26 @@ textarea.field {
 
 /* Badges */
 .badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-family: var(--font-mono);
   font-size: 0.75em;
-  padding: 2px 8px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  padding: 4px 10px;
   border-radius: 999px;
   border: 1px solid var(--border);
   color: var(--text-muted);
+}
+.badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+  flex-shrink: 0;
 }
 .badge-on {
   border-color: #245c40;

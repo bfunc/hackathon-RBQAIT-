@@ -1,4 +1,5 @@
 import "./server/load";
+import { startConnector1 } from "./server/connector1-process";
 import { dbMiddleware } from "./server/db-middleware";
 import { trpcHandler } from "./server/trpc-handler";
 import vike, { toFetchHandler } from "@vikejs/fastify";
@@ -9,6 +10,10 @@ import type { Server } from "vike/types";
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 async function getHandler() {
+  // connector1 is bundled with this app — start and own its process here.
+  // connector2 stays a separate/remote service; it is not started by the app.
+  await startConnector1();
+
   const app = fastify({
     // Ensures proper HMR support
     forceCloseConnections: true,

@@ -4,7 +4,10 @@ import { DataGrid } from "../../components/DataGrid";
 import type { Widget } from "../../database/kysely/types";
 import type { SchemaInfo } from "../../shared";
 
-const CONNECTORS = [{ id: "connector1", label: "connector1" }];
+const CONNECTORS = [
+  { id: "connector1", label: "connector1" },
+  { id: "connector2", label: "connector2" },
+];
 
 type PreviewResult = { sql: string; columns: string[]; rows: unknown[][] };
 
@@ -44,8 +47,8 @@ export default function Page() {
         Widgets the AI has generated. Curate which ones appear on the demo.
       </p>
 
-      <div className="card" style={{ padding: 0, overflow: "hidden" }}>
-        <table className="data-table">
+      <div className="card" style={{ padding: 0, overflow: "auto" }}>
+        <table className="data-table" style={{ minWidth: 720 }}>
           <thead>
             <tr>
               <th>Name</th>

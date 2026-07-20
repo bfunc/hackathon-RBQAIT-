@@ -30,9 +30,11 @@ export const appRouter = router({
     .mutation(async ({ input }) => {
       const connector = getConnector(input.connectorId);
       const schema = await connector.getSchema();
-      const sql = await generateSql(schema, input.prompt);
-      const { columns, rows } = await connector.execute(sql);
-      return { sql, columns, rows };
+      let result: Awaited<ReturnType<typeof connector.execute>> | undefined;
+      const sql = await generateSql(schema, input.prompt, async (candidate) => {
+        result = await connector.execute(candidate);
+      });
+      return { sql, columns: result!.columns, rows: result!.rows };
     }),
 
   saveWidget: publicProcedure

@@ -6,7 +6,7 @@ import type { SchemaInfo, TableInfo, QueryRequest, QueryResult } from "./shared"
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const dbPath = join(__dirname, "data.db");
-const PORT = Number(process.env["PORT"]) || 4001;
+const PORT = Number(process.env["PORT"]) || 4002;
 
 const IDENTIFIER_RE = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
@@ -99,5 +99,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`connector1 listening on http://localhost:${PORT}`);
+  console.log(`connector2 listening on http://localhost:${PORT}`);
 });

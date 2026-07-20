@@ -1,8 +1,6 @@
 # connector1 API — browser console test snippets
 
-connector1 is started automatically by the app (`app/server/connector1-process.ts`) — just run `npm run dev`
-in `app/` and it'll be listening on `http://localhost:4001`. Don't start it manually in a separate terminal;
-a second instance will collide on the port with the one the app already spawned (EADDRINUSE).
+Make sure the connector is running first: `npm run start -w connector1` (from repo root) — listens on `http://localhost:4001`.
 
 Paste any of the snippets below into the browser devtools console (on any page, or `http://localhost:4001`).
 

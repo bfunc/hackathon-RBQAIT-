@@ -1,17 +1,6 @@
-import { createOpenAI, openai } from "@ai-sdk/openai";
+import { openai } from "@ai-sdk/openai";
 import { generateText } from "ai";
 import type { SchemaInfo } from "../shared";
-
-const proxyBaseURL = process.env["OPENAI_PROXY_URL"];
-const openaiProvider = proxyBaseURL
-  ? createOpenAI({
-      baseURL: proxyBaseURL,
-      apiKey: process.env["OPENAI_API_KEY"] ?? "unused",
-      headers: process.env["OPENAI_PROXY_SECRET"]
-        ? { "x-proxy-key": process.env["OPENAI_PROXY_SECRET"] }
-        : undefined,
-    })
-  : openai;
 
 const FORBIDDEN_KEYWORDS = /\b(INSERT|UPDATE|DELETE|DROP|ALTER|CREATE|ATTACH|PRAGMA|REPLACE|VACUUM)\b/i;
 
@@ -60,8 +49,10 @@ Task: ${userPrompt}
 
 Rules:
 - Return exactly one SELECT statement (a WITH...SELECT is allowed).
+- If the task actually describes multiple, unrelated questions (e.g. separate bullet points or lines),
+  answer only the first one — never combine unrelated aggregations into one query with UNION/UNION ALL.
 - Use relative dates via SQLite-native expressions (e.g. date('now', 'start of month')), never hardcoded dates.
-- Always include a LIMIT clause, no higher than 500.
+- Always include a LIMIT clause, no higher than 15.
 - Output SQL text only — no comments, no markdown code fences, no explanation.`;
 
   if (rejectionReason) {
@@ -72,21 +63,40 @@ Rules:
 
 async function callModel(prompt: string): Promise<string> {
   const { text } = await generateText({
-    model: openaiProvider(process.env["OPENAI_MODEL"] ?? "gpt-4o"),
+    model: openai(process.env["OPENAI_MODEL"] ?? "gpt-4o"),
     prompt,
   });
   return stripMarkdownFences(text);
 }
 
-export async function generateSql(schema: SchemaInfo, userPrompt: string): Promise<string> {
-  const first = await callModel(buildPrompt(schema, userPrompt));
-  try {
-    assertSingleSelect(first);
-    return first;
-  } catch (err) {
-    const reason = err instanceof Error ? err.message : String(err);
-    const second = await callModel(buildPrompt(schema, userPrompt, reason));
-    assertSingleSelect(second);
-    return second;
+const MAX_ATTEMPTS = 3;
+
+/**
+ * `validate`, when given, actually runs the candidate SQL (e.g. against the connector).
+ * Static checks alone (assertSingleSelect) can't catch things like a UNION ALL with
+ * mismatched column counts or a typo'd column name — those only surface at execution time,
+ * so real execution errors get fed back to the model the same way shape-check failures do.
+ */
+export async function generateSql(
+  schema: SchemaInfo,
+  userPrompt: string,
+  validate?: (sql: string) => Promise<void>,
+): Promise<string> {
+  let rejectionReason: string | undefined;
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const sql = await callModel(buildPrompt(schema, userPrompt, rejectionReason));
+    try {
+      assertSingleSelect(sql);
+      if (validate) {
+        await validate(sql);
+      }
+      return sql;
+    } catch (err) {
+      if (attempt === MAX_ATTEMPTS) throw err;
+      rejectionReason = err instanceof Error ? err.message : String(err);
+    }
   }
+
+  throw new Error("unreachable");
 }

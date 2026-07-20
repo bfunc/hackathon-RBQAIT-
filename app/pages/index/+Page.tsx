@@ -6,7 +6,7 @@ const PROMPT_IDEAS: { category: string; prompts: string[] }[] = [
     prompts: [
       "Banker leaderboard: total fees generated this year, ranked descending",
       "Coverage team performance: total deal value and average fee by coverage_team",
-      "Bankers with the most active (non-closed, non-lost) deals right now",
+      "Bankers with the most active (non-closed, non-dead) deals right now",
     ],
   },
   {
@@ -57,7 +57,7 @@ export default function Page() {
 
       <h2 style={{ marginTop: 32 }}>Widget prompt ideas</h2>
       <p style={{ color: "var(--text-muted)" }}>
-        Copy any of these into the Admin page's "New widget" prompt field.
+        Copy any of these into the Admin page's "New widget" prompt field. Generated SQL is capped at 15 rows.
       </p>
       {PROMPT_IDEAS.map((group) => (
         <div key={group.category} style={{ marginBottom: 20 }}>

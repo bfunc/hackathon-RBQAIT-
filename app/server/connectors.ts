@@ -31,7 +31,13 @@ class HttpConnector implements Connector {
 }
 
 const connectors = new Map<string, Connector>([
+  // connector1 is bundled with the app: the app process spawns and owns it (see
+  // server/connector1-process.ts), but it's still reached over HTTP.
   ["connector1", new HttpConnector(process.env["CONNECTOR1_URL"] ?? "http://localhost:4001")],
+  // connector2 is a genuinely separate/remote service: it must already be running
+  // independently (locally on its own port, or deployed remotely) and is never
+  // started by the app.
+  ["connector2", new HttpConnector(process.env["CONNECTOR2_URL"] ?? "http://localhost:4002")],
 ]);
 
 export function getConnector(id: string): Connector {
