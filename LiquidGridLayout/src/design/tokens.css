@@ -1,0 +1,298 @@
+/*
+ * Design tokens — single source of truth for color/type/spacing/radius/shadow.
+ * Component CSS must reference these custom properties, never hardcode values.
+ * Themes are selected via [data-theme="..."] on the document root.
+ *
+ *   theme-1 — dark navy/slate dashboard kit (see docs/TODO-design-theme-1)
+ *   theme-2 — near-black "widget lab" kit with a violet accent
+ *
+ * :root carries theme-1's values as the pre-hydration fallback so there is
+ * no unstyled flash before ThemeProvider stamps data-theme on <html>.
+ */
+
+:root,
+[data-theme="theme-1"] {
+  /* Surfaces */
+  --color-bg: #0e1626;
+  --color-surface: #33445c;
+  --color-surface-header: #0b1220;
+  --color-surface-hover: #3c5069;
+
+  /* Text */
+  --color-text-primary: #f5efe6;
+  --color-text-secondary: #9fb0c3;
+
+  /* Borders — tiles have no resting border in the reference UI; contrast
+     against --color-bg is what reads as a "card". A border only appears
+     as hover/active feedback (--color-accent-primary). --color-divider is
+     the brighter rule used under a tile header, distinct from the
+     (invisible) resting tile edge. */
+  --color-border: transparent;
+  --color-divider: #55697f;
+
+  /* Accents — two distinct tokens, do not conflate */
+  --color-accent-primary: #3b82f6;
+  --color-accent-secondary: #38d0d6;
+
+  /* Icons */
+  --color-icon-default: #b7c2d0;
+  --color-icon-hover-bg: var(--color-accent-primary);
+  --color-icon-hover-fg: #ffffff;
+
+  /* Tooltip */
+  --color-tooltip-bg: #0a0f1a;
+  --color-tooltip-text: #ffffff;
+
+  /* Scrollbar */
+  --color-scrollbar-thumb: #4c5c70;
+
+  /* Drop target / drag feedback */
+  --color-drop-fill: rgba(56, 208, 214, 0.12);
+  --color-drop-border: var(--color-accent-secondary);
+
+  /* Focus ring */
+  --color-focus-ring: var(--color-accent-primary);
+
+  /* Radius */
+  --radius-tile: 8px;
+  --radius-control: 6px;
+  --radius-pill: 999px;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Typography */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-sans);
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 13px;
+  --font-size-md: 14px;
+  --font-size-lg: 18px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --line-height-base: 1.4;
+
+  /* Layout constants */
+  --navbar-height: 56px;
+  --tile-header-height: 36px;
+  --toolbar-icon-size: 24px;
+
+  /* Elevation — flat by default; only drag state gets real shadow */
+  --shadow-tile: none;
+  --shadow-drag: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-tooltip: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-glow:
+    0 0 0 1px rgba(59, 130, 246, 0.4), 0 0 20px rgba(59, 130, 246, 0.25);
+
+  /* Motion */
+  --transition-fast: 120ms ease;
+  --transition-medium: 200ms ease;
+  --transition-slow: 320ms ease;
+
+  /* Surface treatment — only theme-3 turns these on */
+  --page-gradient: none;
+  --panel-blur: 0px;
+  --tile-header-scrim: transparent;
+}
+
+[data-theme="theme-2"] {
+  /* Surfaces */
+  --color-bg: #0a0a0f;
+  --color-surface: #16161d;
+  --color-surface-header: #0c0c11;
+  --color-surface-hover: #1d1d26;
+
+  /* Text */
+  --color-text-primary: #f2f2f6;
+  --color-text-secondary: #8b8b98;
+
+  /* Borders — every tile carries a visible hairline at rest in this kit,
+     unlike theme-1's hover-only border. --color-divider reuses the same
+     subtle gray since header/body share one surface here too. */
+  --color-border: #26262f;
+  --color-divider: #26262f;
+
+  /* Accents — a single violet carries both roles in this kit */
+  --color-accent-primary: #6e56e8;
+  --color-accent-secondary: #6e56e8;
+
+  /* Icons */
+  --color-icon-default: #9a9aa6;
+  --color-icon-hover-bg: var(--color-accent-primary);
+  --color-icon-hover-fg: #ffffff;
+
+  /* Tooltip */
+  --color-tooltip-bg: #050507;
+  --color-tooltip-text: #ffffff;
+
+  /* Scrollbar */
+  --color-scrollbar-thumb: #33333d;
+
+  /* Drop target / drag feedback */
+  --color-drop-fill: rgba(110, 86, 232, 0.14);
+  --color-drop-border: var(--color-accent-primary);
+
+  /* Focus ring */
+  --color-focus-ring: var(--color-accent-primary);
+
+  /* Radius — noticeably more rounded than theme-1 */
+  --radius-tile: 12px;
+  --radius-control: 8px;
+  --radius-pill: 999px;
+
+  /* Spacing scale (structural, shared across themes) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Typography */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-sans);
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 13px;
+  --font-size-md: 14px;
+  --font-size-lg: 18px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --line-height-base: 1.4;
+
+  /* Layout constants — kept identical to theme-1 so switching themes never
+     resizes structural chrome and shifts the page (only colors/radius/
+     shadow should change between themes). */
+  --navbar-height: 56px;
+  --tile-header-height: 36px;
+  --toolbar-icon-size: 24px;
+
+  /* Elevation */
+  --shadow-tile: none;
+  --shadow-drag: 0 12px 32px rgba(0, 0, 0, 0.55);
+  --shadow-tooltip: 0 4px 14px rgba(0, 0, 0, 0.5);
+  --shadow-glow:
+    0 0 0 1px rgba(110, 86, 232, 0.45), 0 0 20px rgba(110, 86, 232, 0.3);
+
+  /* Motion */
+  --transition-fast: 120ms ease;
+  --transition-medium: 200ms ease;
+  --transition-slow: 320ms ease;
+
+  /* Surface treatment — only theme-3 turns these on */
+  --page-gradient: none;
+  --panel-blur: 0px;
+  --tile-header-scrim: transparent;
+}
+
+[data-theme="theme-3"] {
+  /* Surfaces — glass panels over an ambient gradient canvas rather than a
+     flat color. --page-gradient/--panel-blur are consumed directly by
+     .app-shell/.tile in styles.css since a gradient/blur can't be expressed
+     as a single flat color token. */
+  /* Background fades from a purple glow (top-left) to a neutral cool slate
+     — purple is reserved as an accent signal, not the app's everything
+     color, so tiles read as a distinct neutral layer sitting on top. */
+  --color-bg: #101116;
+  --color-surface: rgba(255, 255, 255, 0.045);
+  --color-surface-header: rgba(255, 255, 255, 0.03);
+  --color-surface-hover: rgba(255, 255, 255, 0.075);
+  --page-gradient: radial-gradient(
+    circle at 18% -10%,
+    #2f2160 0%,
+    #1c1830 30%,
+    #14151b 60%,
+    #101116 100%
+  );
+  --panel-blur: 20px;
+  /* Darkened scrim layered under the tile header band only, so header and
+     body — both otherwise the same translucent glass — read as distinct
+     "chrome vs. content" zones at a glance. */
+  --tile-header-scrim: rgba(0, 0, 0, 0.28);
+
+  /* Text */
+  --color-text-primary: #f5f3ff;
+  --color-text-secondary: #a9a3c9;
+
+  /* Borders — thin translucent hairline, visible at rest like theme-2.
+     --color-divider is brighter than --color-border so the header/body
+     seam and the navbar's account-cluster divider both read clearly. */
+  --color-border: rgba(255, 255, 255, 0.09);
+  --color-divider: rgba(255, 255, 255, 0.18);
+
+  /* Accents — violet primary (brand), cyan secondary (used sparingly,
+     e.g. a "live" indicator) */
+  --color-accent-primary: #6c63ff;
+  --color-accent-secondary: #22d3ee;
+
+  /* Icons — bright enough to read clearly against the darker header band */
+  --color-icon-default: #d6d2f5;
+  --color-icon-hover-bg: var(--color-accent-primary);
+  --color-icon-hover-fg: #ffffff;
+
+  /* Tooltip */
+  --color-tooltip-bg: #140f28;
+  --color-tooltip-text: #ffffff;
+
+  /* Scrollbar */
+  --color-scrollbar-thumb: rgba(255, 255, 255, 0.18);
+
+  /* Drop target / drag feedback */
+  --color-drop-fill: rgba(108, 99, 255, 0.14);
+  --color-drop-border: var(--color-accent-primary);
+
+  /* Focus ring */
+  --color-focus-ring: var(--color-accent-primary);
+
+  /* Radius — softest, glassiest of the three kits */
+  --radius-tile: 16px;
+  --radius-control: 10px;
+  --radius-pill: 999px;
+
+  /* Spacing scale (structural, shared across themes) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Typography — Space Grotesk reserved for headline/KPI moments only,
+     body chrome stays on Inter like the other two kits */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Space Grotesk", var(--font-sans);
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 13px;
+  --font-size-md: 14px;
+  --font-size-lg: 19px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --line-height-base: 1.4;
+
+  /* Layout constants — kept identical to the other kits (see note above) */
+  --navbar-height: 56px;
+  --tile-header-height: 36px;
+  --toolbar-icon-size: 24px;
+
+  /* Elevation */
+  --shadow-tile: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-drag: 0 16px 40px rgba(0, 0, 0, 0.6);
+  --shadow-tooltip: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-glow:
+    0 0 0 1px rgba(108, 99, 255, 0.5), 0 0 28px rgba(108, 99, 255, 0.35);
+
+  /* Motion */
+  --transition-fast: 120ms ease;
+  --transition-medium: 200ms ease;
+  --transition-slow: 320ms ease;
+}

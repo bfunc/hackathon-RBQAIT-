@@ -1,0 +1,1128 @@
+/* Component styles — all colors/spacing/type/radius/shadow come from
+   src/design/tokens.css custom properties. No hardcoded values here. */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  background: var(--color-bg);
+}
+
+button {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Thin custom scrollbar, used inside scrollable tile content */
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar-thumb) transparent;
+}
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar-thumb);
+  border-radius: var(--radius-control);
+}
+
+/* ---------- Shell ---------- */
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background: var(--color-bg);
+}
+
+.dashboard-shell {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  background: var(--color-bg);
+}
+
+/* ---------- Navbar ---------- */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  height: var(--navbar-height);
+  padding: 0 var(--space-4);
+  background: var(--color-surface-header);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-primary);
+}
+
+.navbar-logo {
+  display: flex;
+  color: var(--color-accent-primary);
+  flex-shrink: 0;
+}
+
+.navbar-wordmark {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+.navbar-subtitle {
+  font-size: 9px;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+}
+
+.navbar-widget-count {
+  margin-left: var(--space-3);
+  padding-left: var(--space-3);
+  border-left: 1px solid var(--color-divider);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Decorative demo chrome (Generate/Export) — visually present, not wired
+   to real behavior. Reset is the one pill that's actually functional. */
+.navbar-pill {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+.navbar-pill:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-accent-primary);
+}
+
+.navbar-pill-primary {
+  background: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+  color: #ffffff;
+}
+.navbar-pill-primary:hover {
+  filter: brightness(1.08);
+  border-color: var(--color-accent-primary);
+}
+
+.navbar-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--color-divider);
+}
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.navbar-user-name {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.navbar-user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-primary);
+  color: #ffffff;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+}
+
+.navbar-settings-button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+.navbar-settings-button:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+
+.theme-switch {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+}
+
+.theme-switch-option {
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-1) var(--space-2);
+  border-radius: calc(var(--radius-control) - 2px);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+.theme-switch-option:hover {
+  color: var(--color-text-primary);
+  background: var(--color-surface-hover);
+}
+.theme-switch-option-active,
+.theme-switch-option-active:hover {
+  background: var(--color-accent-primary);
+  color: #ffffff;
+}
+
+/* ---------- Sidebar ---------- */
+
+.sidebar {
+  flex-shrink: 0;
+  background: var(--color-surface-header);
+  border-right: 1px solid var(--color-border);
+  overflow: hidden;
+  transition: width var(--transition-medium);
+  position: relative;
+}
+
+/* No width transition while actively dragging — the transition is only
+   for the collapse/expand toggle; during a live drag it would lag behind
+   the mouse instead of tracking it 1:1. */
+.sidebar-resizing {
+  transition: none;
+}
+
+/* Positioned fully inside the sidebar's own box (not straddling the edge)
+   since .sidebar has overflow:hidden, which would clip anything hanging
+   outside it. */
+.sidebar-resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 5;
+}
+.sidebar-resize-handle::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: transparent;
+  transition: background var(--transition-fast);
+}
+.sidebar-resize-handle:hover::after,
+.sidebar-resizing .sidebar-resize-handle::after {
+  background: var(--color-accent-primary);
+}
+
+.sidebar-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-3);
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+.sidebar-toggle:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-accent-primary);
+}
+
+.sidebar-toggle-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--color-accent-primary) 16%, transparent);
+  color: var(--color-accent-primary);
+}
+.sidebar-toggle-icon-mirrored {
+  transform: scaleX(-1);
+}
+
+.sidebar-toggle-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+/* Collapsed rail — icon-only, centered, no pill chrome (no room for the
+   label at 56px wide). */
+.sidebar-toggle-collapsed {
+  justify-content: center;
+  width: 100%;
+  margin: var(--space-3) 0;
+  padding: var(--space-1) 0;
+  border: none;
+  border-radius: var(--radius-control);
+  background: transparent;
+}
+.sidebar-toggle-collapsed:hover {
+  background: var(--color-surface-hover);
+}
+.sidebar-toggle-collapsed .sidebar-toggle-icon-box {
+  background: transparent;
+  color: var(--color-icon-default);
+}
+
+.sidebar-content {
+  padding: 0 var(--space-3) var(--space-3);
+}
+
+.sidebar-tabs {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.sidebar-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  border: none;
+  background: none;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: 0 0 var(--space-2);
+  cursor: pointer;
+  position: relative;
+  transition: color var(--transition-fast);
+}
+.sidebar-tab:hover {
+  color: var(--color-text-primary);
+}
+.sidebar-tab-active {
+  color: var(--color-text-primary);
+}
+.sidebar-tab-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--color-accent-primary);
+  border-radius: 1px;
+}
+
+.sidebar-heading {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 var(--space-3);
+}
+
+.sidebar-placeholder {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Creative Demos tab */
+
+.creative-demos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.creative-demos-search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text-secondary);
+}
+.creative-demos-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  outline: none;
+}
+.creative-demos-search input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.creative-demos-categories {
+  display: flex;
+  gap: var(--space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.creative-demos-categories::-webkit-scrollbar {
+  display: none;
+}
+
+.creative-demos-chip {
+  flex-shrink: 0;
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-1) var(--space-2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+.creative-demos-chip:hover {
+  color: var(--color-text-primary);
+}
+.creative-demos-chip-active {
+  background: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+  color: #ffffff;
+}
+
+.creative-demos-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.creative-demos-empty {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.creative-demo-card {
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-tile);
+  background: var(--color-surface);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.creative-demo-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.creative-demo-card-icon {
+  display: flex;
+  color: var(--color-accent-primary);
+  flex-shrink: 0;
+}
+
+.creative-demo-card-title {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.creative-demo-card-badge {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  background: var(--color-surface-hover);
+  border: 1px solid var(--color-divider);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+}
+
+.creative-demo-card-description {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.creative-demo-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-divider);
+}
+
+.creative-demo-card-label {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-sans);
+}
+
+.creative-demo-run-button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  border: none;
+  border-radius: var(--radius-control);
+  background: var(--color-accent-primary);
+  color: #ffffff;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-1) var(--space-3);
+  cursor: pointer;
+  transition: filter var(--transition-fast);
+}
+.creative-demo-run-button:hover {
+  filter: brightness(1.08);
+}
+
+/* Expanded palette */
+
+.palette-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Deliberately flatter/quieter than a live tile at rest (no fill, no
+   border, smaller radius) — palette items are a "source" to drag from,
+   not a placed instance, and shouldn't be visually mistaken for one. They
+   only pick up tile-like weight (fill + border) on hover/drag. */
+.palette-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  padding: var(--space-2) var(--space-3);
+  background: transparent;
+  color: var(--color-text-primary);
+  cursor: grab;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+.palette-item:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-accent-primary);
+}
+.palette-item:active {
+  cursor: grabbing;
+}
+
+/* The one real drag source in the palette — deliberately louder than the
+   "flatter/quieter" rule above so it reads as the obvious starting point,
+   not just another row in a list. */
+.palette-item-featured {
+  border-color: transparent;
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-primary) 0%,
+    color-mix(in srgb, var(--color-accent-primary) 55%, #8a5cff) 100%
+  );
+  color: #ffffff;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent-primary) 50%, transparent), 0 4px 18px
+    color-mix(in srgb, var(--color-accent-primary) 45%, transparent);
+  animation: palette-featured-glow 2.6s ease-in-out infinite;
+}
+.palette-item-featured:hover {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-primary) 0%,
+    color-mix(in srgb, var(--color-accent-primary) 40%, #8a5cff) 100%
+  );
+  border-color: transparent;
+}
+.palette-item-featured .palette-item-icon,
+.palette-item-featured .palette-item-grip {
+  color: #ffffff;
+}
+.palette-item-featured .palette-item-label {
+  font-weight: var(--font-weight-bold);
+}
+
+@keyframes palette-featured-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent-primary) 50%, transparent), 0 4px 18px
+      color-mix(in srgb, var(--color-accent-primary) 45%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent-primary) 65%, transparent), 0 4px 26px
+      color-mix(in srgb, var(--color-accent-primary) 65%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .palette-item-featured {
+    animation: none;
+  }
+}
+
+.palette-item-icon {
+  display: flex;
+  color: var(--color-icon-default);
+  flex-shrink: 0;
+}
+
+.palette-item-label {
+  flex: 1;
+  font-size: var(--font-size-sm);
+}
+
+.palette-item-grip {
+  display: flex;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+/* Static "Popular Financial Prompts" — dummy quick-start rows, not wired
+   to real generation (see Sidebar.tsx). */
+
+.sidebar-popular-prompts {
+  margin-top: var(--space-4);
+}
+
+.sidebar-popular-prompt-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sidebar-popular-prompt-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+}
+
+.sidebar-popular-prompt-icon {
+  display: flex;
+  margin-top: 1px;
+  color: var(--color-accent-primary);
+  flex-shrink: 0;
+}
+
+.sidebar-popular-prompt-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-popular-prompt-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.sidebar-popular-prompt-description {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.sidebar-popular-prompt-chevron {
+  display: flex;
+  margin-top: 3px;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+/* Collapsed icon rail */
+
+.palette-rail {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.palette-rail-item {
+  width: var(--toolbar-icon-size);
+  height: var(--toolbar-icon-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-control);
+  color: var(--color-icon-default);
+  cursor: grab;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+.palette-rail-item:hover {
+  background: var(--color-icon-hover-bg);
+  color: var(--color-icon-hover-fg);
+}
+
+/* ---------- Settings page ---------- */
+
+.settings-page {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--space-6);
+  background: var(--color-bg);
+}
+
+.settings-heading {
+  margin: 0 0 var(--space-5);
+  font-family: var(--font-display);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.settings-section {
+  max-width: 480px;
+  margin-bottom: var(--space-6);
+}
+
+.settings-section-title {
+  margin: 0 0 var(--space-3);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.settings-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+.settings-button {
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+.settings-button:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-accent-primary);
+}
+
+.settings-button-danger:hover {
+  border-color: #e8615a;
+  color: #e8615a;
+}
+
+/* ---------- Grid area ---------- */
+
+.grid-area {
+  flex: 1;
+  overflow: auto;
+  min-width: 0;
+  background: var(--color-bg);
+}
+
+/* ---------- Tile chrome ---------- */
+
+.tile {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-tile);
+  background: var(--color-surface);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow-tile);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+/* "Expand tile" overlay: portaled to document.body so it escapes the grid
+   item's CSS transform (which would otherwise become the containing block
+   for position: fixed and trap the overlay inside the tile's own bounds). */
+.tile-maximize-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--color-bg);
+  padding: var(--space-4);
+}
+.tile-maximize-overlay .tile-maximized {
+  height: 100%;
+  box-shadow: var(--shadow-drag);
+}
+
+.tile-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--tile-header-height);
+  flex-shrink: 0;
+  padding: 0 var(--space-2) 0 var(--space-1);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.tile-drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--toolbar-icon-size);
+  height: var(--toolbar-icon-size);
+  flex-shrink: 0;
+  color: var(--color-icon-default);
+  cursor: move;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.tile-title-group {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  overflow: hidden;
+}
+
+.tile-title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.tile-category-badge {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  background: var(--color-surface-hover);
+  border: 1px solid var(--color-divider);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+}
+
+.tile-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+.toolbar-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--toolbar-icon-size);
+  height: var(--toolbar-icon-size);
+  border: none;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--color-icon-default);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+.toolbar-icon:hover,
+.toolbar-icon:focus-visible {
+  background: var(--color-icon-hover-bg);
+  color: var(--color-icon-hover-fg);
+}
+
+.tile-content {
+  flex: 1;
+  overflow: auto;
+  padding: var(--space-3);
+  color: var(--color-text-primary);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar-thumb) transparent;
+}
+.tile-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.tile-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.tile-content::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar-thumb);
+  border-radius: var(--radius-control);
+}
+
+/* Hover / active states */
+.react-grid-item:hover > .tile {
+  border-color: var(--color-accent-primary);
+}
+
+/* Dragging ghost: elevated shadow + slight opacity change */
+.react-grid-item.react-draggable-dragging > .tile,
+.react-grid-item.resizing > .tile {
+  box-shadow: var(--shadow-drag);
+  opacity: 0.9;
+}
+
+/* ---------- Tab-group tile ---------- */
+
+.tabbed-tile-header {
+  padding-right: var(--space-1);
+}
+
+.tab-strip {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tab-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  padding: 0 var(--space-3);
+  height: var(--tile-header-height);
+  cursor: grab;
+  position: relative;
+  white-space: nowrap;
+}
+.tab:active {
+  cursor: grabbing;
+}
+.tab::after {
+  content: "";
+  position: absolute;
+  left: var(--space-3);
+  right: var(--space-3);
+  bottom: 0;
+  height: 2px;
+  background: transparent;
+  border-radius: 1px;
+}
+.tab-active {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+.tab-active::after {
+  background: var(--color-accent-secondary);
+}
+
+.tab-scroll-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--toolbar-icon-size);
+  height: var(--toolbar-icon-size);
+  flex-shrink: 0;
+  border: none;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--color-icon-default);
+  cursor: pointer;
+}
+.tab-scroll-button:hover {
+  background: var(--color-icon-hover-bg);
+  color: var(--color-icon-hover-fg);
+}
+.tab-scroll-left .chevron-left {
+  display: inline-flex;
+  transform: rotate(180deg);
+}
+
+/* ---------- Tooltip ---------- */
+
+.tooltip-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.tooltip-bubble {
+  position: fixed;
+  background: var(--color-tooltip-bg);
+  color: var(--color-tooltip-text);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-tile);
+  box-shadow: var(--shadow-tooltip);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* ---------- react-grid-layout overrides ---------- */
+
+.react-grid-item > .react-resizable-handle::after {
+  width: 8px;
+  height: 8px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  border-right-color: var(--color-icon-default);
+  border-bottom-color: var(--color-icon-default);
+  opacity: 0.65;
+  transition:
+    opacity var(--transition-fast),
+    border-color var(--transition-fast);
+}
+.react-grid-item:hover > .react-resizable-handle::after {
+  border-right-color: var(--color-accent-primary);
+  border-bottom-color: var(--color-accent-primary);
+  opacity: 1;
+}
+
+/* Drop target: dashed teal outline + tinted fill, reads as "will land here"
+   rather than a permanent tile */
+.react-grid-item.react-grid-placeholder {
+  background: var(--color-drop-fill);
+  border: 2px dashed var(--color-drop-border);
+  border-radius: var(--radius-tile);
+  opacity: 1;
+}
+
+/* ---------- theme-3 structural overrides ----------
+   Glass/gradient can't be expressed as a flat color token, so these live
+   here rather than in tokens.css. Everything else about theme-3 (colors,
+   radius, shadow) flows through the normal token system untouched. */
+
+[data-theme="theme-3"] .app-shell {
+  background: var(--page-gradient);
+}
+[data-theme="theme-3"] .dashboard-shell,
+[data-theme="theme-3"] .grid-area {
+  background: transparent;
+}
+[data-theme="theme-3"] .navbar,
+[data-theme="theme-3"] .sidebar,
+[data-theme="theme-3"] .tile {
+  backdrop-filter: blur(var(--panel-blur));
+  -webkit-backdrop-filter: blur(var(--panel-blur));
+}
+[data-theme="theme-3"] .navbar {
+  background: rgba(255, 255, 255, 0.03);
+}
+[data-theme="theme-3"] .sidebar {
+  background: rgba(255, 255, 255, 0.02);
+}
+[data-theme="theme-3"] .tile-maximize-overlay {
+  background: var(--page-gradient);
+}
+/* Darken the header band so "chrome" reads as visually distinct from
+   "content" at a glance, instead of both being the same glass tint. */
+[data-theme="theme-3"] .tile-header {
+  background:
+    linear-gradient(var(--tile-header-scrim), var(--tile-header-scrim)),
+    var(--color-surface);
+}

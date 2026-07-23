@@ -1,0 +1,10 @@
+node_modules/
+.vscode/
+.claude/
+.idea/
+.idea/*.*
+.coverage/
+.coverage/*.*
+dist/
+temp/
+*.tsbuildinfo

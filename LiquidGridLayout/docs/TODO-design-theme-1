@@ -1,0 +1,115 @@
+DESIGN REPLICATION TODO — dark dashboard UI kit
+Goal: produce a component library visually indistinguishable from the reference app screenshots (style/tokens only — no business content, labels, or data copied).
+
+NOTE: exact hex/px values below are estimated from a photographed screenshot (camera + compression will have shifted true colors). For pixel-exact fidelity, pull real values via browser devtools getComputedStyle on the actual app before finalizing tokens.
+
+1. COLOR TOKENS
+
+- App background: near-black navy (~#0B1220–#0E1626)
+- Tile/panel background: muted slate-blue, lighter than app bg (~#2E3E52–#334459) — tiles read as cards floating on darker canvas
+- Check for subtle gradient (lighter top / darker bottom) on tile bg vs flat fill
+- Header bar background: darkest navy, near-black, distinct from tile bg
+- Primary accent (active tab underline, links, badges, pills): cyan/teal (~#2FD3D9–#4FC7D9)
+- Secondary accent (active/selected icon fill, segmented control active state): saturated blue (~#3B82F6) — confirm this is a distinct token from the teal, not the same color
+- Primary text: warm off-white/cream, not pure white (large KPI numbers)
+- Secondary/label text: light gray-blue (~#9FB0C3)
+- Border/divider color: low-contrast gray-blue line, barely visible
+- Notification banner background: solid teal/cyan fill (same family as primary accent)
+- Notification banner text: white; link text same white, underlined only
+- Tooltip background: near-black/charcoal, higher contrast than tile bg
+- Tooltip text: white
+- Icon default color: muted white/gray
+- Icon hover/active: rounded-square background fill in secondary accent blue, icon turns white/high-contrast
+
+2. TYPOGRAPHY
+
+- Font family: clean grotesk/sans (system-ui-like or corporate sans) — pick closest available if source font unidentified
+- KPI large numbers: bold, large (~28–36px), tabular/lining figures so digits align
+- KPI unit suffix text (e.g. small label after big number): smaller, lighter weight, muted color, baseline-aligned inline to the right
+- Tile titles: medium weight, small-medium size, white/cream
+- Tab labels: regular weight inactive; active state differentiated by color + underline, not necessarily bold
+- Table header text: bold, smaller than tile title, white
+- Table cell text: regular weight, slightly muted vs pure white
+- Chart axis labels: small, muted gray-blue; x-axis labels may rotate at an angle when space-constrained
+
+3. TILE / PANEL CHROME
+
+- Corner radius: small-medium rounding on all tiles (~6–10px)
+- Tile header row: title left, action icon row right, thin horizontal divider below separating header from content
+- Header height: compact single line, generous horizontal padding
+- Resize handle: small diagonal-lines glyph, bottom-right corner, low-contrast, subtle unless hovered
+- Tile hover state: verify whether tile bg lightens or border appears on hover
+- Drag state: elevated shadow + slight opacity change + placeholder outline left in original position (standard pattern, infer since not directly visible mid-drag)
+
+4. TABS (page-level and tile-internal)
+
+- Inactive tab: muted gray-blue text, no underline/background
+- Active tab: brighter white/cream (or accent) text + thin (~2px) underline bar in teal accent, width = label width only, not full tab-strip width
+- Overflow affordance: ">" chevron button when tabs exceed available width (seen on tile-internal tabs) — build as generic "more tabs" control
+- Comfortable horizontal spacing between tabs, no vertical separators — color/underline is the only differentiator
+
+5. TOOLBAR ICON ROW (top-right of each tile)
+
+- Icon set: export, download, expand/fullscreen, close — treat as a generic configurable icon-action row
+- Default: small, muted white/gray, evenly spaced, minimal internal padding
+- Hover/active: rounded-square accent-blue fill appears behind the icon, icon inverts to white, cursor becomes pointer
+- Click target padding larger than the glyph itself (hover square bigger than icon)
+
+6. TOOLTIPS
+
+- Trigger: hover over toolbar icon
+- Position: adjacent to icon (verify dynamic placement based on available space)
+- Background: solid near-black, high contrast vs tile bg
+- Text: white, single line, small-medium, medium weight
+- Padding: generous, reads as small solid box not thin label
+- No arrow/caret pointer nub — plain floating rounded rect
+- Corner radius matches general tile radius token
+
+7. NOTIFICATION / SYSTEM BANNER
+
+- Solid teal/cyan fill, docked near top of content, overlaps other UI (elevated z-index, dismissible toast behavior, not part of normal flow)
+- Contains: message text (white) + inline underlined link (white, underline only) + dismiss X icon (right, same style as tile close icons)
+- Slight corner rounding + soft shadow beneath for elevation separation from content behind
+
+8. FILTER CHIPS / BADGES
+
+- Filter chip: rounded rect, tile-toned dark background, white text, inline "X" remove icon on right, thin border outline
+- Status pill/badge (small teal-filled): fully rounded pill shape, solid teal fill, compact padding, small font — verify text contrast (may be dark navy text on teal, distinct from banner's white-on-teal)
+
+9. INPUTS
+
+- Text/search input: rounded rect, thin light border, transparent or slightly-lighter-than-bg fill, muted placeholder text, comfortable left padding, no separate label (placeholder-as-label pattern)
+- Input height aligned with toolbar icon row height for visual consistency
+
+10. TABLES
+
+- Header row: bold white text above a thin full-width divider
+- Sort indicator: small up/down arrow glyph next to header label, shown on active sorted column (verify whether all sortable columns show muted arrow or only active one)
+- Column headers truncate with ellipsis when too narrow — implies user-resizable columns
+- No zebra striping visible — rows likely flat, differentiated only on hover (verify)
+- Empty state: header shows with blank body, no "no data" message visible in source — decide whether to keep this silent-empty pattern or add a message
+
+11. CHARTS
+
+- Axis lines: thin, muted gray-blue
+- Axis labels: small muted text; x-axis month labels may rotate when space-constrained
+- Gridlines: minimal-to-none, relies mainly on axis baseline
+- Legend: small colored square swatches + label text, bottom-positioned, horizontal layout
+- Toggle controls (e.g. time range / chart type switchers): segmented-button group — inactive segments transparent/muted text, active segment gets solid blue fill + white text, grouped as one rounded-rect control
+
+12. SCROLLBARS
+
+- Thin custom scrollbar (not default OS style) — light gray-blue thumb, transparent/invisible track, flush to container edge, only inside scrollable tile content
+
+13. CROSS-CUTTING INTERACTION STATES
+
+- One consistent hover pattern reused everywhere clickable: rounded-square accent-blue fill + icon color inversion (toolbar icons, banner dismiss, filter chip remove, etc.)
+- Consistent keyboard focus-ring style using accent-blue token (not visible in source, required for a11y-complete replication)
+- Pointer/hand cursor on every clickable target, not just some
+
+14. ELEVATION / SHADOWS
+
+- Tiles: little-to-no shadow against dark bg — differentiation mainly via background color contrast, keep flat
+- Banner/toast: slightly more elevation than tiles — subtle shadow since it floats above content
+
+DELIVERABLE: a token set (colors, spacing, radius, shadow, typography scale) + component-level state specs (default/hover/active/disabled) mapped onto: sidebar, grid-area, tile, tile-header, toolbar-icon, tab-strip, tab-item, tooltip, banner, chip, badge, input, table, chart-legend, segmented-control, scrollbar — ready to apply to the existing DOM structure without requiring structural changes.

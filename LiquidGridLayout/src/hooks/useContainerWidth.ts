@@ -1,0 +1,27 @@
+import { useEffect, useRef, useState } from "react";
+
+// RGL's default WidthProvider only listens for window resize, which misses
+// container-width changes that aren't caused by the window resizing (e.g.
+// the sidebar collapsing/expanding). ResizeObserver watches the container
+// element itself instead.
+export function useContainerWidth<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (entry) setWidth(entry.contentRect.width);
+    });
+
+    observer.observe(el);
+    setWidth(el.getBoundingClientRect().width);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, width };
+}
